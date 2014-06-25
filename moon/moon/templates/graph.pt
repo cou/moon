@@ -1,10 +1,10 @@
 <html>
 <head>
-	<title>ぐらふじぇねれーた</title>
+	<title>GraphGenerator2</title>
 </head>
 <body>
 	<header>
-		<h1>ぐらふじぇねれーた</h1>
+		<h1>GraphGenerator2</h1>
 	</header>
 	<div id="contents">
 		<form action="/generate" method="POST" enctype="multipart/form-data" target="_blank">

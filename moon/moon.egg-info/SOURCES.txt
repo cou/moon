@@ -18,8 +18,7 @@ moon/static/pyramid-16x16.png
 moon/static/pyramid.png
 moon/static/theme.css
 moon/static/theme.min.css
-moon/static/images/Chrysanthemum.jpg
-moon/static/images/Desert.jpg
-moon/static/images/graph.jpg
+moon/static/images/graph.png
 moon/templates/graph.pt
+moon/templates/image.pt
 moon/templates/mytemplate.pt

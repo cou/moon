@@ -9,10 +9,6 @@ from numpy.random import randn
 import matplotlib.font_manager as fm 
 import csv
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
-def my_view(request):
-    return {'project': 'moon'}
-
 @view_config(route_name='graph', renderer='templates/graph.pt')
 def graph(request):
     return {'project': 'moon'}
