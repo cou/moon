@@ -1,5 +1,0 @@
-pyramid==1.5
-pyramid_chameleon
-pyramid_debugtoolbar
-waitress
-pyramid_scss
