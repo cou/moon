@@ -1,0 +1,15 @@
+dl {
+	font-size:18px;
+	dt {
+		float:left;
+		margin-left:20px;
+	}
+	dd {
+		padding:0 0 0 130px;
+		margin:10px 0 20px;
+		border-bottom:1px solid black;
+	}
+	dd:last-child {
+		border:none;
+	}
+}
