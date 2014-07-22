@@ -12,10 +12,11 @@
 			<dl>
 				<dt>ファイル名</dt><dd><input type="input" name="title" /></dd>
 				<dt>ファイル</dt><dd><input type="file" name="file" /></dd>
-				<dt>種類</dt><dd><input type="radio" name="type" id="type1" /><label for="type1"></label>
-								 <input type="radio" name="type" id="type2" /><label for="type2"></label>
-								 <input type="radio" name="type" id="type3" /><label for="type3"></label>
-								 <input type="radio" name="type" id="type4" /><label for="type4"></label></dd>
+				<dt>種類</dt>
+					<dd>
+						<metal:input tal:repeat="type graph_type">
+						<input type="radio" name="type" id="type${repeat.type.number}" value="${type}" /><label for="type${repeat.type.number}">${type}</label>
+						</metal:input>
 				<dt></dt><dd><input type="submit" value="生成" /></dd>
 			</dl>
 		</form>
