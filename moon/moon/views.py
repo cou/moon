@@ -34,6 +34,10 @@ def generate(request):
     try:
         log.info("--start-- graph_generate")
         cur_path = os.path.dirname(__file__)
+        log.debug(request.params)
+        if "file" not in request.POST:
+            path = "/static/pyramid.png"
+            return {"path":path}
         filename = request.POST["file"].filename
         input_file = request.POST["file"].file
         gtype = request.params.get("type","binary")

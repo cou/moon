@@ -8,7 +8,7 @@
 		<h1>GraphGenerator2</h1>
 	</header>
 	<div id="contents">
-		<form action="/generate" method="POST" enctype="multipart/form-data" target="_blank">
+		<form action="/generate" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
 			<dl>
 				<dt>ファイル名</dt><dd><input type="input" name="title" /></dd>
 				<dt>ファイル</dt><dd><input type="file" name="file" /></dd>
