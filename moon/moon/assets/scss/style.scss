@@ -5,9 +5,16 @@ dl {
 		margin-left:20px;
 	}
 	dd {
-		padding:0 0 0 130px;
+		padding:0 0 0 160px;
 		margin:10px 0 20px;
 		border-bottom:1px solid black;
+		label {
+			white-space: pre;
+			margin-right: 0;
+			width: 150px;
+			display: inline-block;
+			line-height:1.4em;
+		}
 	}
 	dd:last-child {
 		border:none;

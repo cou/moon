@@ -11,12 +11,14 @@
 		<form action="/generate" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
 			<dl>
 				<dt>ファイル名</dt><dd><input type="input" name="title" /></dd>
-				<dt>ファイル</dt><dd><input type="file" name="file" /></dd>
+				<dt>ファイル</dt><dd><input type="file" name="file" required /></dd>
 				<dt>種類</dt>
 					<dd>
 						<metal:input tal:repeat="type graph_type">
-						<input type="radio" name="type" id="type${repeat.type.number}" value="${type}" /><label for="type${repeat.type.number}">${type}</label>
+						<label for="type${repeat.type.number}"><input type="radio" name="graph_type" id="type${repeat.type.number}" value="${type}" />${type}</label>
 						</metal:input>
+				<dt>引き伸ばし倍率</dt><dd>横：<input type="number" name="graph_width" value="1"  min="1" step="1" style="margin-right:30px;" required />縦：<input type="number" name="graph_height" value="1" min="1" step="1" required /></dd>
+				<dt>キャンバスサイズ</dt><dd>横：<input type="number" name="canvas_width" value="8"  min="1" step="1" style="margin-right:30px;"  required />縦：<input type="number" name="canvas_height" value="6" min="1" step="1" required /></dd>
 				<dt></dt><dd><input type="submit" value="生成" /></dd>
 			</dl>
 		</form>

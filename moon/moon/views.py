@@ -1,7 +1,12 @@
 from pyramid.view import view_config
 from pyramid.response import Response
+from moon.libs import validation
+
 import logging,os
 log = logging.getLogger(__name__)
+import matplotlib
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
@@ -30,29 +35,50 @@ def graph(request):
 
 @view_config(route_name='generate', renderer="templates/image.pt")
 def generate(request):
-    title = request.params.get("title","")
+    schema = validation.ValidateGraphGenerateForm()
+    try:
+        form = schema.to_python(request.params)
+    except validation.Invalid,e:
+        log.exception("")
+        res = json.dumps({"res":"ng","error":e.msg})
+        return Response(res)
+    title = form["title"]
+    gtype = form["graph_type"]
+    graph_height = form["graph_height"]
+    graph_width = form["graph_width"]
+    canvas_height = form["canvas_height"]
+    canvas_width = form["canvas_width"]
     try:
         log.info("--start-- graph_generate")
         cur_path = os.path.dirname(__file__)
-        log.debug(request.params)
         if "file" not in request.POST:
             path = "/static/pyramid.png"
             return {"path":path}
         filename = request.POST["file"].filename
         input_file = request.POST["file"].file
-        gtype = request.params.get("type","binary")
         # Make plot with vertical (default) colorbar
-        fig, ax = plt.subplots()
-        
+        fig, ax = plt.subplots(figsize=(canvas_width, canvas_height),dpi=10)
+
         csvfile = csv.reader(input_file)
-        data = [map(float,d) for d in csvfile]
+        #data = [map(float,d) for d in csvfile]
+        data = []
+        for i in csvfile:
+            row = []
+            for j in i:
+                for width in range(graph_width):
+                    row.append(float(j))
+            for height in range(graph_height):
+                data.append(row)
         cax = ax.imshow(data, interpolation='nearest', cmap=cm.__getattribute__(gtype))
         prop = fm.FontProperties(fname=cur_path+'/static/font/ipag.ttf')
         ax.set_title(title, fontproperties=prop)
         
         # Add colorbar, make sure to specify tick locations to match desired ticklabels
-        cbar = fig.colorbar(cax, ticks=[-1, 0, 1])
-        cbar.ax.set_yticklabels(['< -1', '0', '> 1'])# vertically oriented colorbar
+        _min = min(min(data))
+        _max = max(max(data))
+        _ave = ((min(min(data))+max(max(data)))/2.0)
+        cbar = fig.colorbar(cax, ticks=[_min,_ave ,_max ])
+        cbar.ax.set_yticklabels(['%f'%(_min), '%f'%(_ave), '%s'%(_max)])# vertically oriented colorbar
         path = "/static/images/graph.png"
         fig.savefig(cur_path+path)
         log.info("--end-- graph_generate")
