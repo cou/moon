@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>ぐらふじぇねれーた</title>
+	<title>GraphGenerator2</title>
 </head>
 <body>
 	<img src="${path}" />

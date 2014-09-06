@@ -1,3 +1,4 @@
+# coding: utf8
 from pyramid.view import view_config
 from pyramid.response import Response
 from moon.libs import validation
@@ -48,6 +49,8 @@ def generate(request):
     graph_width = form["graph_width"]
     canvas_height = form["canvas_height"]
     canvas_width = form["canvas_width"]
+    minv = form["minv"]
+    maxv = form["maxv"]
     try:
         log.info("--start-- graph_generate")
         cur_path = os.path.dirname(__file__)
@@ -66,7 +69,10 @@ def generate(request):
             row = []
             for j in i:
                 for width in range(graph_width):
-                    row.append(float(j))
+                    v = float(j)
+                    v = minv if minv and minv>v else v
+                    v = maxv if maxv and maxv<v else v
+                    row.append(v)
             for height in range(graph_height):
                 data.append(row)
         cax = ax.imshow(data, interpolation='nearest', cmap=cm.__getattribute__(gtype))
@@ -74,9 +80,14 @@ def generate(request):
         ax.set_title(title, fontproperties=prop)
         
         # Add colorbar, make sure to specify tick locations to match desired ticklabels
+        
+        # グラフ表示用のデータ生成
         _min = min(min(data))
         _max = max(max(data))
         _ave = ((min(min(data))+max(max(data)))/2.0)
+        log.debug("min = %d"%_min)
+        log.debug("max = %d"%_max)
+        log.debug("ave = %d"%_ave)
         cbar = fig.colorbar(cax, ticks=[_min,_ave ,_max ])
         cbar.ax.set_yticklabels(['%f'%(_min), '%f'%(_ave), '%s'%(_max)])# vertically oriented colorbar
         path = "/static/images/graph.png"

@@ -2,6 +2,27 @@
 <head>
 	<title>GraphGenerator2</title>
 	<link rel="stylesheet" href="/css/style.css" />
+	<script src="/static/js/jquery.min.js"></script>
+	<script>
+		$(function(){
+			if($("#use_maxmin").is(":checked")){
+				$("#maxmin").removeClass("disabled");
+				$("#maxv,#minv","#maxmin").prop("disabled",false);
+			}else{
+				$("#maxmin").addClass("disabled");
+				$("#maxv,#minv","#maxmin").prop("disabled",true);
+			}
+			$("#use_maxmin").click(function(){
+				if($(this).is(":checked")){
+					$("#maxmin").removeClass("disabled");
+					$("#maxv,#minv","#maxmin").prop("disabled",false);
+				}else{
+					$("#maxmin").addClass("disabled");
+					$("#maxv,#minv","#maxmin").prop("disabled",true);
+				}
+			})
+		})
+	</script>
 </head>
 <body>
 	<header>
@@ -18,7 +39,14 @@
 						<label for="type${repeat.type.number}"><input type="radio" name="graph_type" id="type${repeat.type.number}" value="${type}" />${type}</label>
 						</metal:input>
 				<dt>引き伸ばし倍率</dt><dd>横：<input type="number" name="graph_width" value="1"  min="1" step="1" style="margin-right:30px;" required />縦：<input type="number" name="graph_height" value="1" min="1" step="1" required /></dd>
-				<dt>キャンバスサイズ</dt><dd>横：<input type="number" name="canvas_width" value="8"  min="1" step="1" style="margin-right:30px;"  required />縦：<input type="number" name="canvas_height" value="6" min="1" step="1" required /></dd>
+				<dt>上限・下限</dt>
+					<dd>
+						<label for="use_maxmin"><input type="checkbox" id="use_maxmin" />使用する</label><br />
+						<div id="maxmin" class="disabled">
+						上限：<input type="number" name="maxv" id="maxv" value="" min="0" /><br />
+						下限：<input type="number" name="minv" id="minv" value="" min="0" />
+						</div>
+					</dd>
 				<dt></dt><dd><input type="submit" value="生成" /></dd>
 			</dl>
 		</form>
