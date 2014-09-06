@@ -51,6 +51,8 @@ def generate(request):
     canvas_width = form["canvas_width"]
     minv = form["minv"]
     maxv = form["maxv"]
+    splitnum = form["splitnum"]
+    
     try:
         log.info("--start-- graph_generate")
         cur_path = os.path.dirname(__file__)
@@ -70,6 +72,9 @@ def generate(request):
             for j in i:
                 for width in range(graph_width):
                     v = float(j)
+                    if v >=1200:
+                        log.debug("@"*20)
+                        log.debug(v)
                     v = minv if minv and minv>v else v
                     v = maxv if maxv and maxv<v else v
                     row.append(v)
@@ -82,14 +87,15 @@ def generate(request):
         # Add colorbar, make sure to specify tick locations to match desired ticklabels
         
         # グラフ表示用のデータ生成
-        _min = min(min(data))
-        _max = max(max(data))
-        _ave = ((min(min(data))+max(max(data)))/2.0)
+        _min = min([j for i in data for j in i ])
+        _max = max([j for i in data for j in i])
+        _ave = (_min+_max)/2.0
         log.debug("min = %d"%_min)
         log.debug("max = %d"%_max)
         log.debug("ave = %d"%_ave)
-        cbar = fig.colorbar(cax, ticks=[_min,_ave ,_max ])
-        cbar.ax.set_yticklabels(['%f'%(_min), '%f'%(_ave), '%s'%(_max)])# vertically oriented colorbar
+        ticks = [_min]+[_min+d*(_max-_min)/float(splitnum) for d in range(1,splitnum)]+[_max]
+        cbar = fig.colorbar(cax, ticks=ticks)
+        cbar.ax.set_yticklabels(['%.3f'%t for t in ticks])# vertically oriented colorbar
         path = "/static/images/graph.png"
         fig.savefig(cur_path+path)
         log.info("--end-- graph_generate")

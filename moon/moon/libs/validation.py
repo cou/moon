@@ -15,3 +15,6 @@ class ValidateGraphGenerateForm(Schema):
     canvas_width = Int(if_missing=6)
     minv = Number(if_missing=None)
     maxv = Number(if_missing=None)
+    canvas_width = Int()
+    canvas_height = Int()
+    splitnum = Int()

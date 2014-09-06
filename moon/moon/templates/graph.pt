@@ -29,7 +29,7 @@
 		<h1>GraphGenerator2</h1>
 	</header>
 	<div id="contents">
-		<form action="/generate" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+		<form action="/generate" method="POST" enctype="multipart/form-data" accept-charset="utf-8" target="_blank">
 			<dl>
 				<dt>ファイル名</dt><dd><input type="input" name="title" /></dd>
 				<dt>ファイル</dt><dd><input type="file" name="file" required /></dd>
@@ -38,7 +38,16 @@
 						<metal:input tal:repeat="type graph_type">
 						<label for="type${repeat.type.number}"><input type="radio" name="graph_type" id="type${repeat.type.number}" value="${type}" />${type}</label>
 						</metal:input>
-				<dt>引き伸ばし倍率</dt><dd>横：<input type="number" name="graph_width" value="1"  min="1" step="1" style="margin-right:30px;" required />縦：<input type="number" name="graph_height" value="1" min="1" step="1" required /></dd>
+				<dt>キャンバスサイズ</dt>
+				<dd>
+					横：<input type="number" name="canvas_width" value="8"  min="1" step="1" style="margin-right:30px;" required />
+					縦：<input type="number" name="canvas_height" value="4" min="1" step="1" required />
+				</dd>
+				<dt>引き伸ばし倍率</dt>
+				<dd>
+					横：<input type="number" name="graph_width" value="1"  min="1" step="1" style="margin-right:30px;" required />
+					縦：<input type="number" name="graph_height" value="1" min="1" step="1" required />
+				</dd>
 				<dt>上限・下限</dt>
 					<dd>
 						<label for="use_maxmin"><input type="checkbox" id="use_maxmin" />使用する</label><br />
@@ -47,6 +56,7 @@
 						下限：<input type="number" name="minv" id="minv" value="" min="0" />
 						</div>
 					</dd>
+				<dt>カラーバー分割数</dt><dd><input type="number" name="splitnum" value="2" min="0" /></dd>
 				<dt></dt><dd><input type="submit" value="生成" /></dd>
 			</dl>
 		</form>
