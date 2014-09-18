@@ -1,8 +1,6 @@
 import formencode
-from formencode.compound import All
-from formencode.validators import Int,String,Email,TimeConverter,OneOf,DateValidator,Number
+from formencode.validators import Int,String,Number,FieldStorageUploadConverter
 from formencode.schema import Schema
-from formencode.foreach import ForEach
 from formencode import Invalid
 
 class ValidateGraphGenerateForm(Schema):
@@ -18,3 +16,4 @@ class ValidateGraphGenerateForm(Schema):
     canvas_width = Int()
     canvas_height = Int()
     splitnum = Int()
+    file = FieldStorageUploadConverter(not_empty=True)

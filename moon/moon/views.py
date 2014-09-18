@@ -1,6 +1,6 @@
 # coding: utf8
 from pyramid.view import view_config
-from pyramid.response import Response
+from pyramid.response import Response,FileResponse
 from moon.libs import validation
 
 import logging,os
@@ -9,11 +9,10 @@ import matplotlib
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib import cm
-from numpy.random import randn
-import matplotlib.font_manager as fm 
+import matplotlib.font_manager as fm
 import csv
+import StringIO
 
 @view_config(route_name='graph', renderer='templates/graph.pt')
 def graph(request):
@@ -34,16 +33,17 @@ def graph(request):
         'terrain', 'flag', 'prism']
     return {'project': 'moon','graph_type':graph_type}
 
-@view_config(route_name='generate', renderer="templates/image.pt")
+@view_config(route_name='generate')
 def generate(request):
     schema = validation.ValidateGraphGenerateForm()
     try:
         form = schema.to_python(request.params)
     except validation.Invalid,e:
         log.exception("")
-        res = json.dumps({"res":"ng","error":e.msg})
-        return Response(res)
+        return Response(e.msg)
     title = form["title"]
+    filename = form["file"].filename
+    input_file = form["file"].file
     gtype = form["graph_type"]
     graph_height = form["graph_height"]
     graph_width = form["graph_width"]
@@ -52,40 +52,27 @@ def generate(request):
     minv = form["minv"]
     maxv = form["maxv"]
     splitnum = form["splitnum"]
-    
+
     try:
         log.info("--start-- graph_generate")
-        cur_path = os.path.dirname(__file__)
-        if "file" not in request.POST:
-            path = "/static/pyramid.png"
-            return {"path":path}
-        filename = request.POST["file"].filename
-        input_file = request.POST["file"].file
-        # Make plot with vertical (default) colorbar
-        fig, ax = plt.subplots(figsize=(canvas_width, canvas_height),dpi=10)
-
-        csvfile = csv.reader(input_file)
-        #data = [map(float,d) for d in csvfile]
         data = []
+        #log.debug(input_file)
+        csvfile = csv.reader(input_file)
         for i in csvfile:
             row = []
             for j in i:
                 for width in range(graph_width):
                     v = float(j)
-                    if v >=1200:
-                        log.debug("@"*20)
-                        log.debug(v)
                     v = minv if minv and minv>v else v
                     v = maxv if maxv and maxv<v else v
                     row.append(v)
             for height in range(graph_height):
                 data.append(row)
+        fig, ax = plt.subplots(figsize=(canvas_width, canvas_height),dpi=10)
         cax = ax.imshow(data, interpolation='nearest', cmap=cm.__getattribute__(gtype))
-        prop = fm.FontProperties(fname=cur_path+'/static/font/ipag.ttf')
+        cur_path = os.path.dirname(__file__)
+        prop = fm.FontProperties(fname=cur_path+'/static/fonts/ipag.ttf')
         ax.set_title(title, fontproperties=prop)
-        
-        # Add colorbar, make sure to specify tick locations to match desired ticklabels
-        
         # グラフ表示用のデータ生成
         _min = min([j for i in data for j in i ])
         _max = max([j for i in data for j in i])
@@ -96,10 +83,12 @@ def generate(request):
         ticks = [_min]+[_min+d*(_max-_min)/float(splitnum) for d in range(1,splitnum)]+[_max]
         cbar = fig.colorbar(cax, ticks=ticks)
         cbar.ax.set_yticklabels(['%.3f'%t for t in ticks])# vertically oriented colorbar
-        path = "/static/images/graph.png"
-        fig.savefig(cur_path+path)
+
+        imgdata = StringIO.StringIO()
+        fig.savefig(imgdata,format='png')
+        imgdata.seek(0)
         log.info("--end-- graph_generate")
-    except:
+    except Exception,e:
         log.exception("")
-        path = "/static/pyramid.png"
-    return {"path":path}
+        return Response("%s"%e)
+    return Response(imgdata.read(),content_type="image/png")

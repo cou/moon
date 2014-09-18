@@ -5,11 +5,17 @@ sys.setdefaultencoding("utf8")
 
 from pyramid.config import Configurator
 
+# ウェブヘルパーをテンプレートで使えるようにする
+from pyramid.events import BeforeRender
+from webhelpers.html import tags
+def add_renderer_globals(event):
+   event['h'] = tags
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(settings=settings)
+    config.add_subscriber(add_renderer_globals, BeforeRender)
     config.include('pyramid_chameleon')
     config.add_static_view('static', 'static', cache_max_age=0)
     config.include('pyramid_scss')

@@ -1,26 +1,22 @@
 dl {
-	font-size:18px;
-	dt {
-		float:left;
-		margin-left:20px;
-	}
-	dd {
-		padding:0 0 0 180px;
-		margin:10px 0 20px;
-		border-bottom:1px solid black;
-		label {
-			white-space: pre;
-			margin-right: 0;
-			width: 150px;
-			display: inline-block;
-			line-height:1.4em;
-		}
-	}
-	dd:last-child {
-		border:none;
-	}
-}
-
-#maxmin.disabled {
-	color:gray;
+    font-size:18px;
+    dt {
+        float:left;
+        margin-left:20px;
+    }
+    dd {
+        padding:0 0 5px 180px;
+        margin:10px 0 30px;
+        border-bottom:1px solid;
+        label {
+            white-space: pre;
+            margin-right: 0;
+            width: 170px;
+            display: inline-block;
+            line-height:1.4em;
+        }
+    }
+    dd:last-child {
+        border:none;
+    }
 }
